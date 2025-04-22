@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: verdana;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center; 
+            background: linear-gradient(to right, #e6d698, #f0c29a);
+            height: 100vh;
+            overflow: hidden;
+            margin: 0px;
+        }
+        .login{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: baseline;
+            padding: 20px;
+            width: 350px;
+            height: 340px;
+            border-radius: 10px;
+            background-color: #ffffffda;
+        }
+        h1{
+            color: rgb(64, 62, 62);
+            font-size: 40px;
+        }
+        .app-logo{
+            display: flex;
+            justify-content: left;
+            align-items: center;
+        }
+        .app-logo img{
+            width: 55px;
+            height: 50px;
+            margin-right: 5px;
+            border-radius: 10px;
+        }
+        .details{
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            width: 95%;
+        }
+        .details p{
+            font-size: 12px;
+        }
+        .details a{
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .otp-input {
+            display: flex;
+            justify-content: space-between;
+        }
+        .otp-input input{
+            align-self: center;
+            height: 33px;
+            width: 33px;
+            outline: none;
+            border: 1px solid gray;
+            margin-top: 8px;
+            background-color: transparent;
+            margin-bottom: 10px;
+        }
+        .details button{
+            font-size:15px;
+            margin-top: 10px;
+            width: 80px;
+            padding: 5px 3px;
+            cursor: pointer;
+            background-color:  #f5bc87;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #login{
+            align-self: flex-end;
+        }
+    </style>
+</head>
+<body>
+        <h1>OTP Verification</h1>
+        <form class="login">
+            <div class="app-logo">
+                <img src="app-logo.png" alt="app-logo">
+                <p>Quiz Application</p>
+            </div>
+            <div class="details">
+                <p>Enter OTP</p>
+                <div class="otp-input">
+                    <input type="text" maxlength="1">
+                    <input type="text" maxlength="1">
+                    <input type="text" maxlength="1">
+                    <input type="text" maxlength="1">
+                    <input type="text" maxlength="1">
+                    <input type="text" maxlength="1">
+                </div>
+                <button id="login">verify</button>
+            </div>
+        </form>
+</body>
+</html>

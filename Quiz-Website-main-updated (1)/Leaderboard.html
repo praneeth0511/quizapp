@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #3498db;
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin: 2rem 0;
+            font-size: 2.2rem;
+            text-align: center;
+        }
+
+        .leaderboard-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        td:first-child {
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        td:nth-child(3) {
+            font-weight: 600;
+            color: #27ae60;
+        }
+
+        button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .leaderboard-container {
+                padding: 1.5rem;
+            }
+            
+            th, td {
+                padding: 0.8rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+    <script>
+        window.onload = function() {
+            if(localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'signin.html';
+            }
+
+            // Calculate leaderboard
+            const results = JSON.parse(localStorage.getItem('results')) || [];
+            const leaderboard = {};
+
+            results.forEach(result => {
+                if(!leaderboard[result.username]) {
+                    leaderboard[result.username] = 0;
+                }
+                leaderboard[result.username] += result.score;
+            });
+
+            // Sort and display
+            const sorted = Object.entries(leaderboard)
+                .sort((a, b) => b[1] - a[1]);
+            
+            const tbody = document.getElementById('leaderboard-body');
+            sorted.forEach(([user, score], index) => {
+                const row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${user}</td>
+                    <td>${score}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        };
+    </script>
+</head>
+<body>
+    <div class="nav">
+        <a href="landingpage.html">Home</a> |
+        <a href="profile.html">Profile</a> |
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <h2>Leaderboard</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Total Score</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+    </table>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'signin.html';
+        }
+    </script>
+</body>
+</html>

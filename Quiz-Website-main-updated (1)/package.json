@@ -1,0 +1,17 @@
+{
+    "name": "quiz-website",
+    "version": "1.0.0",
+    "description": "A quiz website with frontend and backend",
+    "main": "backend_server.js",
+    "scripts": {
+        "start": "node backend_server.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "dotenv": "^10.0.0",
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5"
+    },
+    "author": "",
+    "license": "ISC"
+}
