@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Quiz</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: white;
+            text-align: center;
+            color: black;
+            margin: 0;
+        }
+        .header {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .quiz-container {
+            margin: 40px auto;
+            max-width: 600px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 15px;
+        }
+        .question {
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: #ffcc00;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .options button:hover {
+            background: #ff9900;
+        }
+        .navigation {
+            margin-top: 20px;
+        }
+        .navigation button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 0 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+        .prev-btn { background: gray; color: white; }
+        .next-btn { background: #28a745; color: white; }
+    </style>
+    <script>
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            alert('You need to sign in first!');
+            window.location.href = 'signin.html'; // Redirect to signin if not logged in
+        }
+
+        let quiz = null;
+        let currentQuestion = 0;
+
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        let userAnswers = []; // Array to track user's answers
+
+        function showQuestion(index) {
+            const container = document.getElementById('question-box');
+            container.innerHTML = '';
+            if (index >= 0 && index < quiz.questions.length) {
+                const q = quiz.questions[index];
+                const currentAnswer = userAnswers[index] || '';
+                const html = `
+                    <div class="question">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((opt, i) => `
+                            <label>
+                                <input type="radio" name="question${index}" value="${opt.trim()}" 
+                                    ${currentAnswer === opt.trim() ? 'checked' : ''}>
+                                ${opt}
+                            </label><br>
+                        `).join('')}
+                    </div>`;
+                container.innerHTML = html;
+            }
+        }
+
+        function saveCurrentAnswer() {
+            const selectedOption = document.querySelector(`input[name="question${currentQuestion}"]:checked`);
+            userAnswers[currentQuestion] = selectedOption ? selectedOption.value.trim() : null;
+        }
+
+        function nextQuestion() {
+            saveCurrentAnswer();
+            if (currentQuestion < quiz.questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function prevQuestion() {
+            saveCurrentAnswer();
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function submitQuiz() {
+            saveCurrentAnswer(); // Save last question's answer
+            
+            let score = 0;
+            quiz.questions.forEach((q, i) => {
+                const correctAnswerIndex = parseInt(q.correctAnswer) - 1;
+                const correctAnswerText = q.options[correctAnswerIndex].trim();
+                
+                if (userAnswers[i] && userAnswers[i] === correctAnswerText) {
+                    score++;
+                }
+            });
+
+            alert(`You scored ${score} out of ${quiz.questions.length}`);
+            
+            // Save result
+            const username = localStorage.getItem('username');
+            let results = JSON.parse(localStorage.getItem('results')) || [];
+            results.push({ username, score });
+            localStorage.setItem('results', JSON.stringify(results));
+        }
+
+        window.onload = function() {
+            const selectedQuizIndex = getQueryParam('quiz');
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+        
+            if (selectedQuizIndex !== null && quizzes[selectedQuizIndex]) {
+                quiz = quizzes[selectedQuizIndex];
+                document.getElementById("quiz-title").innerText = quiz.title;
+                userAnswers = new Array(quiz.questions.length).fill(null); // Initialize answers
+                showQuestion(currentQuestion);
+            } else {
+                alert('No quiz selected or data is missing!');
+                window.location.href = 'landingpage.html';
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h2 id="quiz-title">Loading...</h2>
+    </div>
+    <div class="quiz-container" id="question-box">
+        <!-- Question will load here -->
+    </div>
+    <div class="navigation">
+        <button class="prev-btn" onclick="prevQuestion()">Previous</button>
+        <button class="next-btn" onclick="nextQuestion()">Next</button>
+        <button class="next-btn" onclick="submitQuiz()">Submit</button>
+    </div>
+    
+</body>
+</html>

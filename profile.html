@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .nav {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #3498db;
+        }
+
+        .profile-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+        }
+
+        #username {
+            color: #3498db;
+            font-weight: 600;
+            font-size: 1.4rem;
+            margin-left: 8px;
+        }
+
+        h3 {
+            color: #2c3e50;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        #history {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            gap: 1rem;
+        }
+
+        #history li {
+            background: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s ease;
+        }
+
+        #history li:hover {
+            transform: translateX(10px);
+        }
+
+        #history li::before {
+            content: "🏆";
+            font-size: 1.2rem;
+        }
+
+        button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .profile-card {
+                padding: 1.5rem;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+
+    <script>
+        window.onload = function() {
+            if(localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'signin.html';
+            }
+            
+            // Display user info
+            document.getElementById('username').textContent = 
+                localStorage.getItem('username');
+            
+            // Display quiz history
+            const results = JSON.parse(localStorage.getItem('results')) || [];
+            const userResults = results.filter(r => r.username === localStorage.getItem('username'));
+            
+            const historyList = document.getElementById('history');
+            userResults.forEach(result => {
+                const li = document.createElement('li');
+                li.textContent = `Score: ${result.score}`;
+                historyList.appendChild(li);
+            });
+        };
+    </script>
+</head>
+<body>
+    <div class="nav">
+        <a href="landingpage.html">Home</a> |
+        <a href="Leaderboard.html">Leaderboard</a> |
+        <button onclick="logout()">Logout</button>
+    </div>
+    
+    <div class="profile-card">
+        <h2>Profile</h2>
+        <p style="font-size: 1.2rem;">Username: <span id="username"></span></p>
+        
+        <h3>Quiz History:</h3>
+        <ul id="history"></ul>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'signin.html';
+        }
+    </script>
+</body>
+</html>

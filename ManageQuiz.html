@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Quizzes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        .quiz-list {
+            margin-top: 20px;
+        }
+        .quiz-item {
+            background: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .quiz-item button {
+            margin-left: 5px;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            color: white;
+        }
+        .edit-btn { background-color: #007bff; }
+        .delete-btn { background-color: #dc3545; }
+        .deploy-btn { background-color: #28a745; }
+    </style>
+    <script>
+        function loadQuizzes() {
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            const list = document.getElementById('quiz-list');
+            list.innerHTML = '';
+            quizzes.forEach((quiz, index) => {
+                const item = document.createElement('div');
+                item.className = 'quiz-item';
+                item.innerHTML = `
+                    <span><strong>${quiz.title}</strong></span>
+                    <div>
+                        <button class="edit-btn" onclick="editQuiz(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteQuiz(${index})">Delete</button>
+                        <button class="deploy-btn" onclick="deployQuiz(${index})">Deploy</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function deleteQuiz(index) {
+            const quizzes = JSON.parse(localStorage.getItem('quizzes')) || [];
+            quizzes.splice(index, 1);
+            localStorage.setItem('quizzes', JSON.stringify(quizzes));
+            loadQuizzes();
+        }
+
+        function editQuiz(index) {
+            window.location.href = `CreateQuiz.html?edit=${index}`;
+        }
+
+        function deployQuiz(index) {
+            window.location.href = `Quiz.html?quiz=${index}`;
+        }
+
+        window.onload = loadQuizzes;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Manage Your Quizzes</h2>
+        <div id="quiz-list" class="quiz-list"></div>
+    </div>
+</body>
+</html>
